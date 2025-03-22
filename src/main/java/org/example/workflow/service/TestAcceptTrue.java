@@ -11,3 +11,4 @@ public class TestAcceptTrue implements JavaDelegate {
         System.out.println(execution.getVariable("letter"));
     }
 }
+

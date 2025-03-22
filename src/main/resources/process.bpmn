@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0fr9mxs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.13.0">
+  <bpmn:collaboration id="Collaboration_17o4iug">
+    <bpmn:participant id="vacationrequest" name="فرایند درخواست مرخصی در سازمان" processRef="vacation-process" />
+  </bpmn:collaboration>
+  <bpmn:process id="vacation-process" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1445rg5">
+      <bpmn:lane id="Lane_0otfnty" name="مدیریت گروه">
+        <bpmn:flowNodeRef>decisionMaking</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>perceptionReqquest</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_0nkezcp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1cx407t</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1bm6x7h" name="متقاضی">
+        <bpmn:flowNodeRef>startProcess</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="SequenceFlow_17ddwv2" sourceRef="startProcess" targetRef="perceptionReqquest" />
+    <bpmn:startEvent id="startProcess" name="نگارش درخواست مرخصی توسط کارمند" camunda:asyncBefore="true" camunda:initiator="starter">
+      <bpmn:outgoing>SequenceFlow_17ddwv2</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_01rpfwz" messageRef="Message_3cvn98p" />
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="decisionMaking" name="اعمال تصمیم گیری" camunda:asyncBefore="true">
+      <bpmn:incoming>SequenceFlow_0jb05bw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_110gnb1</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1y6ey5v</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="perceptionReqquest" name="مشاهده درخواست در داشبورد/کارتابل توسط مدیریت گروه" camunda:asyncBefore="true" camunda:assignee="modir1">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="name" label="نام متقاضی" type="string" />
+          <camunda:formField id="family" label="نام خانوادگی متقاضی" type="string" />
+          <camunda:formField id="fromDate" label="تاریخ شروع مرخصی" type="date" />
+          <camunda:formField id="toDate" label="تاریخ پایان مرخصی" type="date" />
+          <camunda:formField id="result" label="نتیجه" type="enum">
+            <camunda:value id="accept" name="تایید" />
+            <camunda:value id="reject" name="رد" />
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_17ddwv2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0jb05bw</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0jb05bw" sourceRef="perceptionReqquest" targetRef="decisionMaking" />
+    <bpmn:sequenceFlow id="SequenceFlow_110gnb1" name="موافقت با درخواست" sourceRef="decisionMaking" targetRef="EndEvent_0nkezcp">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${accept==true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1y6ey5v" name="عدم موافت با درخواست" sourceRef="decisionMaking" targetRef="Event_1cx407t">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${accept==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EndEvent_0nkezcp" name="پاسخ موافقت با مرخصی" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="org.example.workflow.service.TestAcceptTrue" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_110gnb1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_1cx407t" name="پاسخ عدم موافقت با مرخصی">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="org.example.workflow.service.TestAcceptTrue" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1y6ey5v</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_3cvn98p" name="Message_3cvn98p" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_17o4iug">
+      <bpmndi:BPMNShape id="Participant_0zw7kol_di" bpmnElement="vacationrequest" isHorizontal="true">
+        <dc:Bounds x="152" y="85" width="1043" height="595" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1bm6x7h_di" bpmnElement="Lane_1bm6x7h" isHorizontal="true">
+        <dc:Bounds x="182" y="85" width="1013" height="205" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0otfnty_di" bpmnElement="Lane_0otfnty" isHorizontal="true">
+        <dc:Bounds x="182" y="290" width="1013" height="390" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1oyydrq_di" bpmnElement="startProcess">
+        <dc:Bounds x="322" y="159" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="301" y="202" width="81" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0l0ycf4_di" bpmnElement="decisionMaking" isMarkerVisible="true">
+        <dc:Bounds x="787" y="415" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="768.5" y="391" width="87" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0iujtpq_di" bpmnElement="perceptionReqquest">
+        <dc:Bounds x="535" y="400" width="150" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1t4udex_di" bpmnElement="EndEvent_0nkezcp">
+        <dc:Bounds x="988" y="422" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="972" y="468" width="72" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ajcsl4_di" bpmnElement="Event_1cx407t">
+        <dc:Bounds x="794" y="569" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="772" y="612" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_17ddwv2_di" bpmnElement="SequenceFlow_17ddwv2">
+        <di:waypoint x="358" y="177" />
+        <di:waypoint x="450" y="177" />
+        <di:waypoint x="450" y="440" />
+        <di:waypoint x="535" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0jb05bw_di" bpmnElement="SequenceFlow_0jb05bw">
+        <di:waypoint x="685" y="440" />
+        <di:waypoint x="787" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_110gnb1_di" bpmnElement="SequenceFlow_110gnb1">
+        <di:waypoint x="837" y="440" />
+        <di:waypoint x="988" y="440" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="897" y="406" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1y6ey5v_di" bpmnElement="Flow_1y6ey5v">
+        <di:waypoint x="812" y="465" />
+        <di:waypoint x="812" y="569" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="814" y="494" width="63" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
+
