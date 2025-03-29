@@ -11,4 +11,5 @@ public interface CockpitService {
     List<String> deployedProcesses();
     String getBpmnModel(String processInstanceId);
     void startProcessInstance(VacationBpmsModel model, String processName);
+    void deleteAllProcesses();
 }

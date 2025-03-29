@@ -44,4 +44,9 @@ public class CockpitController {
         return ResponseEntity.ok(cockpitService.getBpmnModel(processInstanceId));
     }
 
+    @DeleteMapping("/delete-all-processes")
+    void deleteAllProcesses(){
+        cockpitService.deleteAllProcesses();
+    }
+
 }

@@ -1,5 +1,6 @@
 package org.example.workflow.service.impl;
 
+import lombok.SneakyThrows;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.repository.ResourceDefinition;
@@ -9,6 +10,9 @@ import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.example.workflow.model.VacationBpmsModel;
 import org.example.workflow.service.CockpitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -79,6 +83,33 @@ public class CockpitServiceImpl implements CockpitService {
                 .businessKey(model.getEmployeeNationalNumber())
                 .setVariables(model.createMap())
                 .execute();
+    }
+
+    @Override
+    public void deleteAllProcesses() {
+
+        List<String> deployedProcesses = repositoryService.createProcessDefinitionQuery()
+                .list()
+                .stream()
+                .map(ResourceDefinition::getId)
+                .collect(Collectors.toList());
+
+        for (String processId : deployedProcesses) {
+            repositoryService.deleteProcessDefinition(processId, true);
+        }
+
+        repositoryService.createDeployment()
+                .addClasspathResource("process.bpmn")
+                .deploy();
+
+    }
+
+
+    @SneakyThrows
+    private Resource[] bpmnResource(){
+        String bpmnFilesFolder = "file:src/main/resources/*.bpmn";
+        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+        return  resourcePatternResolver.getResources(bpmnFilesFolder);
     }
 
     private void checkNoOtherProcessExists(VacationBpmsModel model, String processName){
