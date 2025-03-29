@@ -34,7 +34,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     //todo correct currentUser and set current username user logged in with authenticate service
     //@Autowired
-//    private String currentUser;
+    //private String currentUser;
 
     @Override
     public List<TaskInboxItemModel> userSearchClaimableTasks(TasksSearchModel params) {
