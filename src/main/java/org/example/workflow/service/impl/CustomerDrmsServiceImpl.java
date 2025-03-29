@@ -16,15 +16,6 @@ import org.springframework.stereotype.Service;
 public class CustomerDrmsServiceImpl implements CustomerDrmsService {
 
     @Autowired
-    private RuntimeService runtimeService;
-
-    @Autowired
-    private TaskService taskService;
-
-    @Autowired
-    private HistoryService historyService;
-
-    @Autowired
     private RepositoryService repositoryService;
 
     @Autowired
