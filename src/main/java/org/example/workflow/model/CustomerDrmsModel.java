@@ -16,7 +16,7 @@ import java.util.Map;
 public class CustomerDrmsModel {
 
     private String customerFullName;
-    private String customerNid;
+    private String customerRequestAccount;
     private Long customerAge;
 
 

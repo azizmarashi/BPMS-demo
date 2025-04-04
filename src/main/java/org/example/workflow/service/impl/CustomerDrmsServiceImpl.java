@@ -1,6 +1,5 @@
 package org.example.workflow.service.impl;
 
-import org.camunda.bpm.dmn.engine.DmnDecision;
 import org.camunda.bpm.dmn.engine.DmnDecisionTableResult;
 import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.repository.DecisionDefinition;
@@ -40,10 +39,10 @@ public class CustomerDrmsServiceImpl implements CustomerDrmsService {
         boolean approve = result.getFirstResult().getEntry("approve");
 
         CustomerRegistrationResponseModel responseModel = new CustomerRegistrationResponseModel();
-        responseModel.setApprove(approve);
+        responseModel.setRegistrationApprove(approve);
         if (approve){
-            responseModel.setLetter("Registration Approved");
-        }else responseModel.setLetter("Registration Not Approved");
+            responseModel.setMessage("Registration Approved");
+        }else responseModel.setMessage("Registration Not Approved");
 
         return responseModel;
     }

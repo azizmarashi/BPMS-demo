@@ -14,7 +14,7 @@ public class CustomerDrmsController {
     private CustomerDrmsService customerDrmsService;
 
     @ResponseBody
-    @GetMapping("/register-customer-by-age")
+    @PostMapping("/register-customer-by-age")
     public CustomerRegistrationResponseModel registerCustomerByAge(@RequestBody CustomerDrmsModel customerDrmsModel){
         return customerDrmsService.registerCustomerByAge(customerDrmsModel);
     }

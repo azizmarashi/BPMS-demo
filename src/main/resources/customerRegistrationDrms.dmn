@@ -8,20 +8,20 @@
         </inputExpression>
       </input>
       <output id="approvalOutput" name="approve" typeRef="boolean" />
-      <rule id="rule1">
-        <inputEntry id="ageLessThanOrEqual18">
-          <text>&lt; 18</text>
-        </inputEntry>
-        <outputEntry id="rejectOutput">
-          <text>false</text>
-        </outputEntry>
-      </rule>
       <rule id="rule2">
         <inputEntry id="ageGreaterThan18">
           <text>&gt;= 18</text>
         </inputEntry>
         <outputEntry id="approveOutput">
           <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="rule1">
+        <inputEntry id="ageLessThanOrEqual18">
+          <text>&lt; 18</text>
+        </inputEntry>
+        <outputEntry id="rejectOutput">
+          <text>false</text>
         </outputEntry>
       </rule>
     </decisionTable>

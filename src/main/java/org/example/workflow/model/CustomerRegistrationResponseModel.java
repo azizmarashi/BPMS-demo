@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomerRegistrationResponseModel {
 
-    private Boolean approve;
-    private String letter;
+    private Boolean registrationApprove;
+    private String message;
 }
